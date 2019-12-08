@@ -1,4 +1,5 @@
 ﻿using DAL;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,11 @@ namespace BLL
 {
     public class BusinessLogic
     {
-        private AgencyContext context;
+        public AgencyContext context;
 
-        public BusinessLogic(AgencyContext context)
+        public BusinessLogic()
         {
-            this.context = context;
+            this.context = new AgencyContext();
         }
         public void AddClient(Client client)
         {
@@ -35,6 +36,14 @@ namespace BLL
         public ICollection<Client> FindClientsByLastName(String name)
         {
             return context.Clients.Where(e => e.LastName == name).ToList<Client>();
+        }
+        public ICollection<Client> ContainsClientsByKeyWordInLastName(String name)
+        {
+            return context.Clients.Where(e => e.LastName.Contains(name)).ToList<Client>();
+        }
+        public ICollection<RealEstate> ContainsRealEsateByKeyWordInType(String name)
+        {
+            return context.RealEstates.Where(e => e.Type.Contains(name)).ToList<RealEstate>();
         }
         public Client FindClientByBankAccount(int bankAccount)
         {
@@ -63,6 +72,10 @@ namespace BLL
             context.RealEstates.Remove(realEstate);
             context.SaveChanges();
         }
+        public RealEstate FindRealEstateById(int id)
+        {
+            return context.RealEstates.Where(e => e.RealEstateId == id).FirstOrDefault<RealEstate>();
+        }
         public ICollection<RealEstate> FindRealEstatesByType(String name)
         {
             return context.RealEstates.Where(e => e.Type == name).ToList<RealEstate>();
@@ -77,7 +90,9 @@ namespace BLL
         }
         public ICollection<RealEstate> AllRealEstatesSortedByPrice()
         {
-            return context.RealEstates.OrderBy(e => e.Price).ToList<RealEstate>();
+            return context.RealEstates
+                .Include(re => re.RealEstateSuggestions)
+                .OrderBy(e => e.Price).ToList<RealEstate>();
         }
         public void AddSuggestion(Suggestion suggestion)
         {
@@ -91,9 +106,11 @@ namespace BLL
         }
         public ICollection<Suggestion> FindSuggestionsByClientId(int clientId)
         {
-            return context.Suggestions.Where(e => e.Client.ClientId == clientId).ToList<Suggestion>();
+            return context
+                .Suggestions
+                .Include(s => s.RealEstateSuggestions)
+                .Where(e => e.Client.ClientId == clientId).ToList<Suggestion>();
         }
-
         public void AddRealEstateSuggestion(RealEstateSuggestion realEstateSuggestion)
         {
             context.Add(realEstateSuggestion);
@@ -103,6 +120,18 @@ namespace BLL
         {
             context.RealEstateSuggestions.Remove(realEstateSuggestion);
             context.SaveChanges();
+        }
+        public void Commit()
+        {
+            context.SaveChanges();
+        }
+
+        public Suggestion FindSuggestionById(int suggestionId)
+        {
+            return context.Suggestions
+                .Include(s=> s.Client)
+                .Where(e => e.SuggestionId == suggestionId)
+                .FirstOrDefault<Suggestion>();
         }
     }
 }
