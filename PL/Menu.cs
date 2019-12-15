@@ -12,7 +12,7 @@ namespace PL
         private BusinessLogic businessLogic;
         public Menu()
         {
-            businessLogic = new BusinessLogic();
+            businessLogic = new BusinessLogic(new AgencyContext());
         }
         public int menu()
         {
@@ -202,11 +202,28 @@ namespace PL
             }
         }
 
-        public void printClientByKeyWordInLastName()
+        public void printClientByKeyWord()
         {
-            foreach (Client c in businessLogic.ContainsClientsByKeyWordInLastName("no"))
+            Console.WriteLine("1 - find client by key word in firstname");
+            Console.WriteLine("2 - find client by key in lastname");
+            int num = Convert.ToInt32(Console.ReadLine());
+            if (num == 1)
             {
-                Console.WriteLine(c.ToString());
+                Console.WriteLine("Please, enter key word");
+                String s = Console.ReadLine();
+                foreach (Client c in businessLogic.ContainsClientsByKeyWordInFirstName(s))
+                {
+                    Console.WriteLine(c.ToString());
+                }
+            }
+            if (num == 2)
+            {
+                Console.WriteLine("Please, enter key word");
+                String s = Console.ReadLine();
+                foreach (Client c in businessLogic.ContainsClientsByKeyWordInLastName(s))
+                {
+                    Console.WriteLine(c.ToString());
+                }
             }
         }
         public void addSuggestion()
@@ -218,7 +235,7 @@ namespace PL
                 int id = Convert.ToInt32(Console.ReadLine());
                 Client client = searchClientByID(id);
                 Console.WriteLine("Enter number of real estates (1-4) ");
-                int number = Convert.ToInt32(Console.ReadLine());//надо проверить что число от 1 до 4
+                int number = Convert.ToInt32(Console.ReadLine());
                 Suggestion s = new Suggestion { Client = client };
                 businessLogic.AddSuggestion(s);
                 for(int i=0; i<number; i++)
@@ -310,7 +327,7 @@ namespace PL
         {
             return businessLogic.FindRealEstatesByType(type);
         }
-        public ICollection<RealEstate> searchRealEstateByType(int price)
+        public ICollection<RealEstate> searchRealEstateByPrice(int price)
         {
             return businessLogic.FindRealEstatesByPrice(price);
         }

@@ -47,7 +47,7 @@ namespace Kursach
                 }
                 if (op == 9)
                 {
-                    menu.printClientByKeyWordInLastName();
+                    menu.printClientByKeyWord();
                 }
                 if (op == 10)
                 {

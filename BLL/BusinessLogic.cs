@@ -11,13 +11,13 @@ namespace BLL
     {
         public AgencyContext context;
 
-        public BusinessLogic()
+        public BusinessLogic( AgencyContext context)
         {
-            this.context = new AgencyContext();
+            this.context = context;
         }
         public void AddClient(Client client)
         {
-            context.Add(client);
+            context.Clients.Add(client);
             context.SaveChanges();
         }
         public void DeleteClient(Client client)
@@ -40,6 +40,10 @@ namespace BLL
         public ICollection<Client> ContainsClientsByKeyWordInLastName(String name)
         {
             return context.Clients.Where(e => e.LastName.Contains(name)).ToList<Client>();
+        }
+        public ICollection<Client> ContainsClientsByKeyWordInFirstName(String name)
+        {
+            return context.Clients.Where(e => e.FirstName.Contains(name)).ToList<Client>();
         }
         public ICollection<RealEstate> ContainsRealEsateByKeyWordInType(String name)
         {
@@ -64,7 +68,7 @@ namespace BLL
         }
         public void AddRealEstate(RealEstate realEstate)
         {
-            context.Add(realEstate);
+            context.RealEstates.Add(realEstate);
             context.SaveChanges();
         }
         public void DeleteRealEstate(RealEstate realEstate)
@@ -96,7 +100,7 @@ namespace BLL
         }
         public void AddSuggestion(Suggestion suggestion)
         {
-            context.Add(suggestion);
+            context.Suggestions.Add(suggestion);
             context.SaveChanges();
         }
         public void DeleteSuggestion(Suggestion suggestion)
@@ -113,7 +117,7 @@ namespace BLL
         }
         public void AddRealEstateSuggestion(RealEstateSuggestion realEstateSuggestion)
         {
-            context.Add(realEstateSuggestion);
+            context.RealEstateSuggestions.Add(realEstateSuggestion);
             context.SaveChanges();
         }
         public void DeleteRealEstateSuggestion(RealEstateSuggestion realEstateSuggestion)

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL
 {
-    public class AgencyContext : DbContext
+    public class AgencyContext : DbContext, IAgencyContext
     {
         private static bool _created = false;
         public AgencyContext()
@@ -13,13 +13,14 @@ namespace DAL
             if (!_created)
             {
                 _created = true;
-                Database.EnsureCreated();
+                // commented because tests
+                //Database.EnsureCreated();
             }
         }
-        public DbSet<Client> Clients { get; set; }
-        public DbSet<RealEstate> RealEstates { get; set; }
-        public DbSet<Suggestion> Suggestions { get; set; }
-        public DbSet<RealEstateSuggestion> RealEstateSuggestions { get; set; }
+        public virtual DbSet<Client> Clients { get; set; }
+        public virtual DbSet<RealEstate> RealEstates { get; set; }
+        public virtual DbSet<Suggestion> Suggestions { get; set; }
+        public virtual DbSet<RealEstateSuggestion> RealEstateSuggestions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RealEstateSuggestion>().HasKey(res => new { res.SuggestionId, res.RealEstateId });

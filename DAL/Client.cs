@@ -24,7 +24,7 @@ namespace DAL
         public virtual ICollection<Suggestion> Suggestions { get; set; }
         public override string ToString()
         {
-            return String.Format($"ID: {ClientId,-5} FirstName: {FirstName,-30} LaststName: {LastName,-30}");
+            return String.Format($"ID: {ClientId,-5} FirstName: {FirstName,-30} LastName: {LastName,-30}");
         }
     }
 }
