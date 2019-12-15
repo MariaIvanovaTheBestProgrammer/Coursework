@@ -13,6 +13,7 @@ namespace DAL
             if (!_created)
             {
                 _created = true;
+                //hello world
                 // commented because tests
                 //Database.EnsureCreated();
             }
